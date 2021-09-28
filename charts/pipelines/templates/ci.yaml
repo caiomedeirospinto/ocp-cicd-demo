@@ -113,7 +113,7 @@ spec:
     - name: sync-infra
       params:
         - name: application-name
-          value: $(params.APP_NAME)-{{ $env }}
+          value: $(params.APP_NAME)-{{ $environment }}
         - name: revision
           value: $(params.GIT_REVISION)
       taskRef:
