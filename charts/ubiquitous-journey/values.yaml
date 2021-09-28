@@ -50,3 +50,12 @@ applications:
     source_ref: master
     sync_policy: *sync_policy_true
     no_helm: true
+  # Tekton addons
+  - name: tekton-addons
+    enabled: true
+    destination: openshift-gitops
+    source: https://github.com/caiomedeirospinto/ocp-cicd-demo
+    source_path: operators/serverless/serving
+    source_ref: master
+    sync_policy: *sync_policy_true
+    no_helm: true
