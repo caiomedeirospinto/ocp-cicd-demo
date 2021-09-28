@@ -1,0 +1,6 @@
+namespace: openshift-serverless
+
+resources:
+# - namespace.yaml
+- subscription.yaml
+- operator-group.yaml

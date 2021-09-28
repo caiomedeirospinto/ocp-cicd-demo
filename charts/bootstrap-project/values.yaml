@@ -1,0 +1,27 @@
+# Default values for bootstrap-project.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+bindings: &bindings
+  - name: openshift-gitops-argocd-application-controller
+    kind: ServiceAccount
+    role: edit
+    namespace: openshift-gitops
+
+namespaces:
+  - name: openshift-serverless
+    bindings: *bindings
+  - name: knative-serving
+    bindings: *bindings
+  - name: nexus
+    bindings: *bindings
+  - name: yaml-online-develop
+    bindings: *bindings
+  - name: yaml-online-staging
+    bindings: *bindings
+  - name: yaml-online-production
+    bindings: *bindings
+
+serviceaccounts: []
+  # - name: dumy-sa
+  #   namespace: example
