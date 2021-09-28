@@ -10,6 +10,12 @@ Environment simulated in this demo:
 
 Branching strategy:
 
+![Branching Diagram](assets/diagram.png "Branching Diagram")
+
+<details>
+<summary>Diagram in plantuml.</summary>
+<p>
+
 ```plantuml
 @startuml
 actor "Developer" as developer
@@ -58,11 +64,18 @@ tag ..> cdeploy : "Webhook push event"
 @enduml
 ```
 
+</p>
+</details>
+
 ## Prerequisites
 
 * 1x Openshift Container Platform version 4.5 or later.
 * Helm CLI installed in your workstation.
 * OC CLI installed in your workstation.
+* Make your own fork of the following repositories:
+    * [Yaml Online](https://github.com/caiomedeirospinto/yaml-online).
+    * [MS Yaml Online](https://github.com/caiomedeirospinto/yaml-ms-online-session).
+    * [WS Yaml Online](https://github.com/caiomedeirospinto/yaml-ws-online-session).
 
 ## Step by step
 
@@ -123,10 +136,10 @@ tag ..> cdeploy : "Webhook push event"
     </p>
     </details>
 
-3. Deploy YAML Online product:
+3. Deploy base platforms:
 
     ```bash
-    helm template -f charts/ubiquitous-journey/app-of-apps.yaml charts/ubiquitous-journey/ | oc apply -n openshift-gitops -f -
+    helm template -f charts/ubiquitous-journey/base.yaml charts/ubiquitous-journey/ | oc apply -n openshift-gitops -f -
     ```
 
     > INFO!
@@ -138,18 +151,56 @@ tag ..> cdeploy : "Webhook push event"
     ```bash
     argocd login "$(oc get route openshift-gitops-server -n openshift-gitops -o go-template='{{ .spec.host }}')" --username admin \
         --password "$(oc get secrets openshift-gitops-cluster -n openshift-gitops -o go-template='{{index .data "admin.password"}}' | base64 --decode)"
+    argocd app list
     ```
 
-5. Simulates a push event to develop Git webhook calling to event listener:
+    <details>
+    <summary>Ver output esperado.</summary>
+    <p>
+
+    ```bash
+    NAME                               CLUSTER                         NAMESPACE               PROJECT       STATUS   HEALTH   [...]
+    nexus                              https://kubernetes.default.svc  nexus                   default       Synced   Healthy  [...]
+    platforms                          https://kubernetes.default.svc  openshift-gitops        default       Synced   Healthy  [...]
+    serverless                         https://kubernetes.default.svc  openshift-serverless    default       Synced   Healthy  [...]
+    teams                              https://kubernetes.default.svc  openshift-gitops        default       Synced   Healthy  [...]
+    tekton                             https://kubernetes.default.svc  openshift-operators     default       Synced   Healthy  [...]
+    ```
+
+    </p>
+    </details>
+
+5. Deploy YAML Online platform:
+
+    ```bash
+    helm template -f charts/ubiquitous-journey/apps.yaml charts/ubiquitous-journey/ | oc apply -n openshift-gitops -f -
+    ```
+
+6. Execute pipeline that will release Helm Charts needed to Nexus:
+
+    ```bash
+    oc apply -n nexus -f .iac/templates/first-run.yaml
+    ```
+
+    You can check it on the Openshift Web Console, Developer view and menu option Pipelines.
+
+7. Replace your Nexus URI in the `.iac/Chart.yaml` files of your fork repositories:
+
+    ```bash
+    oc get route nexus -n nexus -o go-template='{{ .spec.host }}'
+    ```
+
+8. Simulates a push event to develop Git webhook calling to event listener:
 
     ```bash
     curl "$(oc get route )"
     ```
 
-6. Login to Openshift Web Console, go to Developer view and to the project `dev`:
+. Login to Openshift Web Console, go to Developer view and to the project `dev`:
 
 
-7. Wait for
+. Wait for
 
 ### Do it without GitOps
 
+TODO!

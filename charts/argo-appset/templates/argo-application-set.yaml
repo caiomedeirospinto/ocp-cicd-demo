@@ -49,9 +49,6 @@ spec:
       {{- if $app.syncPolicy }}
         {{- toYaml $app.syncPolicy | nindent 8 }}
       {{- else }}
-        automated:
-          prune: true
-          selfHeal: false
         syncOptions:
         - Validate=true
       {{- end }}
