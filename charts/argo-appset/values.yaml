@@ -36,7 +36,7 @@ apps:
     team: product-team
     ignoreDifferences: *serverlessIgnoreDifferences
   - name: yaml-ms-online-session
-    enabled: true
+    enabled: false
     repository: https://github.com/caiomedeirospinto/yaml-ms-online-session.git
     deploy:
       version: v1.0.0
@@ -46,7 +46,7 @@ apps:
     team: product-team
     ignoreDifferences: *serverlessIgnoreDifferences
   - name: yaml-ws-online-session
-    enabled: true
+    enabled: false
     repository: https://github.com/caiomedeirospinto/yaml-ws-online-session.git
     deploy:
       version: v1.0.0
