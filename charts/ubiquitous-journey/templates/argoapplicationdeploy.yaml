@@ -25,6 +25,9 @@ spec:
       values: |
 {{- toYaml $app.values | nindent 8 }}
 {{- end }}
+{{- else if $app.directory_recurse }}
+    directory:
+      recurse: {{ default "false" $app.directory_recurse  }}
 {{- end }}
     {{- if $app.source_path }}
     path: {{ $app.source_path }}

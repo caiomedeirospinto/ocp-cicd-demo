@@ -55,7 +55,8 @@ applications:
     enabled: true
     destination: openshift-gitops
     source: https://github.com/caiomedeirospinto/ocp-cicd-demo
-    source_path: operators/serverless/serving
+    source_path: operators/pipelines
     source_ref: master
     sync_policy: *sync_policy_true
+    directory_recurse: true
     no_helm: true
