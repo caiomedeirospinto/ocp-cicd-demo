@@ -24,7 +24,10 @@ spec:
       name: revision
       type: string
     - default: '--'
-      name: flags
+      name: flags-sync
+      type: string
+    - default: '--'
+      name: flags-wait
       type: string
     - default: v2.0.5
       name: argocd-version
@@ -44,6 +47,8 @@ spec:
           yes | argocd login "$ARGOCD_SERVER" --username="$ARGOCD_USERNAME" --password="$ARGOCD_PASSWORD" --insecure;
         fi
 
-        argocd --insecure app sync "$(params.application-name)" --revision "$(params.revision)" "$(params.flags)"
+        argocd --insecure app sync "$(params.application-name)" --revision
+        "$(params.revision)" "$(params.flags-sync)"
 
-        argocd --insecure app wait "$(params.application-name)" --health "$(params.flags)"
+        argocd --insecure app wait "$(params.application-name)" --health
+        "$(params.flags-wait)"
