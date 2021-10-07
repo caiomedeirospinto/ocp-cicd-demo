@@ -22,6 +22,12 @@ spec:
             url: {{ default "https://kubernetes.default.svc" $app.deploy.cluster | quote }}
             values:
               revision: {{ $app.deploy.version }}
+              tag: -green
+          - cluster: {{ default "" $app.deploy.prefix }}
+            url: {{ default "https://kubernetes.default.svc" $app.deploy.cluster | quote }}
+            values:
+              revision: {{ $app.deploy.version }}
+              tag: -blue
   syncPolicy:
     skipPrune: false
   template:
@@ -31,13 +37,16 @@ spec:
         app.kubernetes.io/name: {{ $app.name }}
         app.kubernetes.io/component: {{ $app.name }}
         {{- include "apps.labels" $ | nindent 8 }}
-      name: '{{ $app.name }}-{{ print "{{" }} cluster {{ print "}}" }}'
+      name: '{{ $app.name }}-{{ print "{{" }} cluster {{ print "}}" }}{{ print "{{" }} values.tag {{ print "}}" }}'
     spec:
       destination:
         namespace: '{{ $app.deploy.project }}-{{ print "{{" }} cluster {{ print "}}" }}'
         server: '{{ print "{{" }} url {{ print "}}" }}'
       project: {{ $app.team }}
       source:
+        helm:
+          values: |
+             nameOverride: {{ $app.team }}{{ print "{{" }} values.tag {{ print "}}" }}
         path: {{ default ".iac/" $app.dir }}
         repoURL: '{{ $app.repository }}'
         targetRevision: '{{ print "{{" }} values.revision {{ print "}}" }}'
